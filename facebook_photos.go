@@ -33,9 +33,18 @@ func main() {
 		log.Fatalln("You need to provide a token (--token=<token>)")
 	}
 
-	query := "/me"
-	userResult := runFacebookQuery(query)
+	userQuery := "/me"
+	userResult := runFacebookQuery(userQuery)
 	var user User
 	userResult.Decode(&user)
 	fmt.Println("Downloading pictures for", user.FirstName)
+
+	albumQuery := userQuery + "/albums"
+	albumResult := runFacebookQuery(albumQuery)
+	var albums []fb.Result
+	albumResult.DecodeField("data", &albums)
+	fmt.Println("Album ids:")
+	for _, album := range albums {
+		fmt.Println(album["id"])
+	}
 }
